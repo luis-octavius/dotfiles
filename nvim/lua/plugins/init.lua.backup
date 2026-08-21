@@ -1,0 +1,316 @@
+-- ~/.config/nvim/lua/plugins/init.lua
+return {
+  -- Mason
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "gopls",
+        "gofumpt",
+        "goimports",
+        "pyright",
+        "black",
+        "isort",
+        "ruff",
+        "ruff_lsp",
+        "typescript-language-server",
+        "prettier",
+        "html-lsp",
+        "css-lsp",
+        "jdtls",
+        "lua-language-server",
+        "stylua",
+      },
+    },
+    config = function(_, opts)
+      require("mason").setup(opts)
+    end,
+  },
+
+  -- Mason LSP Config (CRÍTICO - para auto-start)
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "lua_ls",
+        "gopls",
+        "pyright",
+        "ruff_lsp",
+        "tsserver",
+        "html",
+        "cssls",
+      },
+      automatic_installation = true,
+    },
+    config = function(_, opts)
+      local mason_lspconfig = require "mason-lspconfig"
+      mason_lspconfig.setup(opts)
+
+      -- Obter configuração base do NvChad
+      local nvchad_lsp = require "nvchad.configs.lspconfig"
+
+      mason_lspconfig.setup_handlers {
+        -- Configuração padrão para todos os LSPs
+        function(server_name)
+          local server_opts = {
+            on_attach = nvchad_lsp.on_attach,
+            capabilities = nvchad_lsp.capabilities,
+          }
+
+          if server_name == "jdtls" then
+            return
+          end
+
+          -- Configurações específicas por linguagem
+          if server_name == "gopls" then
+            server_opts.settings = {
+              gopls = {
+                analyses = {
+                  unusedparams = true,
+                  shadow = true,
+                },
+                staticcheck = true,
+                gofumpt = true,
+                hints = {
+                  assignVariableTypes = true,
+                  compositeLiteralFields = true,
+                  compositeLiteralTypes = true,
+                  constantValues = true,
+                  functionTypeParameters = true,
+                  parameterNames = true,
+                  rangeVariableTypes = true,
+                },
+              },
+            }
+          elseif server_name == "tsserver" then
+            server_opts.init_options = {
+              preferences = {
+                disableSuggestions = false,
+                includeCompletionsForModuleExports = true,
+                includeCompletionsWithInsertText = true,
+              },
+            }
+            server_opts.settings = {
+              typescript = {
+                inlayHints = {
+                  includeInlayParameterNameHints = "all",
+                  includeInlayFunctionParameterTypeHints = true,
+                  includeInlayVariableTypeHints = true,
+                  includeInlayPropertyDeclarationTypeHints = true,
+                  includeInlayFunctionLikeReturnTypeHints = true,
+                },
+              },
+              javascript = {
+                inlayHints = {
+                  includeInlayParameterNameHints = "all",
+                  includeInlayFunctionParameterTypeHints = true,
+                  includeInlayVariableTypeHints = true,
+                },
+              },
+            }
+          elseif server_name == "lua_ls" then
+            server_opts.settings = {
+              Lua = {
+                diagnostics = {
+                  globals = { "vim" },
+                },
+                workspace = {
+                  checkThirdParty = false,
+                },
+              },
+            }
+          elseif server_name == "ruff_lsp" then
+            -- O ruff_lsp pode desativar o pyright para evitar conflitos
+            server_opts.init_options = {
+              settings = {
+                args = {},
+              },
+            }
+          end
+
+          -- Usar lspconfig tradicional (que funciona com auto-start)
+          require("lspconfig")[server_name].setup(server_opts)
+        end,
+      }
+    end,
+  },
+  {
+    "mfussenegger/nvim-jdtls",
+    ft = { "java" },
+    config = function()
+      -- Configuração MÍNIMA que deve funcionar
+      local config = {
+        -- Usar o binário do Mason diretamente (mais simples)
+        cmd = {
+          vim.fn.stdpath "data" .. "/mason/bin/jdtls",
+          "--jvm-arg=-Xms1g",
+          "--jvm-arg=-Xmx2g",
+        },
+
+        root_dir = require("jdtls.setup").find_root { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" },
+
+        -- Configurações básicas
+        settings = {
+          java = {
+            format = { enabled = false }, -- Desabilitar formatação por enquanto
+            signatureHelp = { enabled = true },
+            completion = {
+              favoriteStaticMembers = {
+                "org.junit.Assert.*",
+                "org.junit.jupiter.api.Assertions.*",
+              },
+            },
+          },
+        },
+
+        flags = {
+          allow_incremental_sync = true,
+          debounce_text_changes = 150,
+        },
+      }
+
+      local nvchad_config = require "nvchad.configs.lspconfig"
+      config.on_attach = nvchad_config.on_attach
+      config.capabilities = nvchad_config.capabilities
+
+      require("jdtls").start_or_attach(config)
+    end,
+  },
+  -- Formatters
+  {
+    "stevearc/conform.nvim",
+    event = "BufWritePre",
+    config = function()
+      require("conform").setup {
+        formatters_by_ft = {
+          lua = { "stylua" },
+          python = { "black", "isort" },
+          go = { "gofumpt", "goimports" },
+          javascript = { "prettier" },
+          typescript = { "prettier" },
+          javascriptreact = { "prettier" },
+          typescriptreact = { "prettier" },
+          html = { "prettier" },
+          java = { "google-java-format" },
+          css = { "prettier" },
+          json = { "prettier" },
+          markdown = { "prettier" },
+        },
+        format_on_save = function(bufnr)
+          -- Desabilitar autoformat para algumas linguagens se preferir
+          local disable_filetypes = { "java", "cpp" }
+          local ft = vim.bo[bufnr].filetype
+
+          if vim.tbl_contains(disable_filetypes, ft) then
+            return
+          end
+
+          return {
+            timeout_ms = 1000,
+            lsp_fallback = true,
+            async = false,
+          }
+        end,
+      }
+
+      -- Mapeamento para formatar manualmente
+      vim.keymap.set({ "n", "v" }, "<leader>fm", function()
+        require("conform").format {
+          lsp_fallback = true,
+          async = false,
+          timeout_ms = 1000,
+        }
+      end, { desc = "Format file/range" })
+    end,
+  },
+
+  -- Treesitter adicional
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    opts = {
+      -- Linguagens que você quer instalar
+      ensure_installed = {
+        "lua",
+        "vim",
+        "vimdoc",
+        "go",
+        "gomod",
+        "gosum",
+        "gowork",
+        "python",
+        "javascript",
+        "typescript",
+        "tsx",
+        "html",
+        "css",
+        "java",
+        "bash",
+        "json",
+        "yaml",
+        "markdown",
+      },
+
+      -- Não sincronize a instalação (evita travamentos)
+      sync_install = false,
+
+      -- Auto-install quando abrir um arquivo de linguagem não instalada
+      auto_install = false,
+
+      -- Configurações de highlight
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+      },
+    },
+  },
+
+  -- Auto-comando para garantir que LSPs iniciem
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      -- Auto-comando para iniciar LSP quando um buffer é carregado
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "go", "python", "javascript", "typescript", "html", "css", "lua", "java" },
+        callback = function(args)
+          local bufnr = args.buf
+          local ft = vim.bo[bufnr].filetype
+
+          -- Mapear filetype para server name
+          local servers = {
+            go = "gopls",
+            python = "pyright",
+            javascript = "tsserver",
+            typescript = "tsserver",
+            html = "html",
+            css = "cssls",
+            lua = "lua_ls",
+            java = "jdtls",
+          }
+
+          local server_name = servers[ft]
+          -- Verificar se o LSP já está ativo
+          if server_name and server_name ~= "jdtls" then -- jdtls já tem auto-start próprio
+            local clients = vim.lsp.get_clients { bufnr = bufnr }
+            local has_lsp = false
+
+            for _, client in ipairs(clients) do
+              if client.name == server_name then
+                has_lsp = true
+                break
+              end
+            end
+
+            if not has_lsp then
+              -- Iniciar o LSP
+              vim.defer_fn(function()
+                vim.cmd("LspStart " .. server_name)
+              end, 100)
+            end
+          end
+        end,
+      })
+    end,
+  },
+}
