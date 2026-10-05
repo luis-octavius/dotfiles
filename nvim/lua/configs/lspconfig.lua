@@ -1,9 +1,15 @@
 -- ~/.config/nvim/lua/configs/lspconfig.lua
-local M = {}
-local utils = require "nvchad.configs.lspconfig.utils"
--- local nvchad_lsp = require "nvchad.configs.lspconfig"
+require("nvchad.configs.lspconfig").defaults()
 
-M.on_attach = function(client, bufnr)
-  utils.on_attach(client, bufnr)
-end
-return M
+local servers = {
+  "lua_ls",
+  "clangd",
+  "html",
+  "css",
+  "typescript-language-server",
+  "gopls",
+  "tailwindcss-language-server",
+  "docker-language-server",
+  "docker-compose-language-server",
+}
+vim.lsp.enable(servers)
