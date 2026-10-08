@@ -77,3 +77,18 @@ hl.window_rule({
   size = { "monitor_w * 0.7", "monitor_h * 0.7"},
   center = true
 })
+
+-- keybindings
+local MOD = hyde.config.modifiers.main 
+
+hl.bind(
+  MOD .. "+ F",
+  hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }),
+  { description = "[Window Management] toggle fullscreen"}
+)
+
+hl.bind(
+  MOD .. "+ ALT + F",
+  hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }),
+  { description = "[Window Management] toggle maximize"}
+)
