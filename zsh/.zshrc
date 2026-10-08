@@ -14,24 +14,8 @@ if [[ $- == *i* ]]; then
     fi
 fi
 
-export PATH=$PATH:$HOME/go/bin
-export EDITOR=nvim
-export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-akrasia today
-
-alias curumim='cd /mnt/stuff/Projects/curumim-escola/'
-alias curumim-docs='cd ~/Documents/Programming\ Vault/Curumim/'
-alias ls='lsd'
-alias lsa='lsd -a'
-alias akr='akrasia'
-alias sourcezsh='source ~/.config/zsh/user.zsh'
-export PATH="$PATH:$HOME/.dotnet/tools"
-
-ZSH_THEME=robbyrussell
-
 #   Overrides 
 # HYDE_ZSH_NO_PLUGINS=1 # Set to 1 to disable loading of oh-my-zsh plugins, useful if you want to use your zsh plugins system 
 # unset HYDE_ZSH_PROMPT # Uncomment to unset/disable loading of prompts from HyDE and let you load your own prompts
@@ -45,5 +29,24 @@ if [[ ${HYDE_ZSH_NO_PLUGINS} != "1" ]]; then
         "sudo"
     )
 fi
+
+# my configuration
+export PATH=$PATH:$HOME/go/bin
+export EDITOR=nvim
+export NVM_DIR="$HOME/.config/nvm"
+
+~/copy-dotfiles.sh
+
+akrasia today
+
+alias curumim='cd /mnt/stuff/Projects/curumim-escola/'
+alias curumim-docs='cd ~/Documents/Programming\ Vault/Curumim/'
+alias ls='lsd'
+alias lsa='lsd -a'
+alias akr='akrasia'
+alias sourcezsh='source ~/.config/zsh/user.zsh'
+export PATH="$PATH:$HOME/.dotnet/tools"
+
+ZSH_THEME=agnoster
 
 
