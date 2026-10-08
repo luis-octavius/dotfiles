@@ -45,6 +45,10 @@ alias ls='lsd'
 alias lsa='lsd -a'
 alias akr='akrasia'
 alias sourcezsh='source ~/.config/zsh/user.zsh'
+alias editzsh='nvim ~/.zshrc'
+alias nvcfg='cd ~/.config/nvim'
+alias hyprcfg='cd ~/.config/hypr'
+
 export PATH="$PATH:$HOME/.dotnet/tools"
 
 ZSH_THEME=agnoster
