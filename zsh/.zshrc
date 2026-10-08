@@ -51,6 +51,6 @@ alias hyprcfg='cd ~/.config/hypr'
 
 export PATH="$PATH:$HOME/.dotnet/tools"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME=powerlevel10k/powerlevel10k
 
 
