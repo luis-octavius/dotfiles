@@ -47,9 +47,37 @@ return {
         "typescript",
         "html",
         "css",
+        "rust",
+        "toml"
       },
       auto_install = true,
       highlight = { enable = true },
     },
+  },
+
+  -- rust
+  {
+    "mrcjkb/rustaceanvim",
+    lazy = false, -- o plugin já faz lazy loading por conta própria
+    init = function()
+      vim.g.rustaceanvim = {
+        server = {
+          on_attach = require("nvchad.configs.lspconfig").on_attach,
+          capabilities = require("nvchad.configs.lspconfig").capabilities,
+          default_settings = {
+            ["rust-analyzer"] = {
+              check = { command = "clippy" }, -- clippy ao salvar, em vez de cargo check
+              cargo = { allFeatures = true },
+            },
+          },
+        },
+      }
+    end,
+  },
+
+  {
+    "saecki/crates.nvim", -- versões e features de dependências no Cargo.toml
+    event = { "BufRead Cargo.toml" },
+    opts = {},
   },
 }
