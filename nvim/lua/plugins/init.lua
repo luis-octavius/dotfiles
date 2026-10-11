@@ -60,10 +60,12 @@ return {
     "mrcjkb/rustaceanvim",
     lazy = false, -- o plugin já faz lazy loading por conta própria
     init = function()
-      vim.g.rustaceanvim = {
-        server = {
-          on_attach = require("nvchad.configs.lspconfig").on_attach,
-          capabilities = require("nvchad.configs.lspconfig").capabilities,
+      vim.g.rustaceanvim = function()
+        local nvlsp = require "nvchad.configs.lspconfig"
+        return {
+          server = {
+          on_attach = nvlsp.on_attach,
+          capabilities = nvlsp.capabilities,
           default_settings = {
             ["rust-analyzer"] = {
               check = { command = "clippy" }, -- clippy ao salvar, em vez de cargo check
@@ -72,6 +74,7 @@ return {
           },
         },
       }
+      end
     end,
   },
 
