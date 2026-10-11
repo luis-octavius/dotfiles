@@ -30,15 +30,22 @@ if [[ ${HYDE_ZSH_NO_PLUGINS} != "1" ]]; then
     )
 fi
 
-# my configuration
+## my configuration
+
+# exports
 export PATH=$PATH:$HOME/go/bin
 export EDITOR=nvim
 export NVM_DIR="$HOME/.config/nvm"
+export PATH="$PATH:$HOME/.dotnet/tools"
+export PATH="$PATH:$HOME/.cargo/bin"
 
+# scripts
 ~/copy-dotfiles.sh
 
+# apps
 akrasia today
 
+# aliases
 alias curumim='cd /mnt/stuff/Projects/curumim-escola/'
 alias curumim-docs='cd ~/Documents/Programming\ Vault/Curumim/'
 alias ls='lsd'
@@ -49,8 +56,7 @@ alias editzsh='nvim ~/.zshrc'
 alias nvcfg='cd ~/.config/nvim'
 alias hyprcfg='cd ~/.config/hypr'
 
-export PATH="$PATH:$HOME/.dotnet/tools"
-
+# theme
 ZSH_THEME=powerlevel10k/powerlevel10k
 
 
