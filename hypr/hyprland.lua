@@ -92,3 +92,6 @@ hl.bind(
   hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }),
   { description = "[Window Management] toggle maximize"}
 )
+
+hl.unbind("ALT + LEFT")
+hl.unbind("ALT + RIGHT")
