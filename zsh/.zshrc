@@ -37,7 +37,7 @@ export PATH=$PATH:$HOME/go/bin
 export EDITOR=nvim
 export NVM_DIR="$HOME/.config/nvm"
 export PATH="$PATH:$HOME/.dotnet/tools"
-export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # scripts
 ~/copy-dotfiles.sh
