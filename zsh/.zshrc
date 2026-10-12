@@ -41,7 +41,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # scripts
 ~/copy-dotfiles.sh
-
+xrandr --output HDMI-A-1 --primary 2>/dev/null
 # apps
 akrasia today
 
