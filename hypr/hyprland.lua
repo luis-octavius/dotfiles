@@ -93,5 +93,12 @@ hl.bind(
   { description = "[Window Management] toggle maximize"}
 )
 
+hl.config({
+  misc = {
+    mouse_move_enables_dpms = true,
+    key_press_enables_dpms = true,
+  },
+})
+
 hl.unbind("ALT + LEFT")
 hl.unbind("ALT + RIGHT")
