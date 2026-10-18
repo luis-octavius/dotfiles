@@ -34,7 +34,7 @@ fi
 
 # exports
 export PATH=$PATH:$HOME/go/bin
-export EDITOR=$EDITOR:nvim
+export EDITOR=nvim
 export NVM_DIR="$HOME/.config/nvm"
 export PATH="$PATH:$HOME/.dotnet/tools"
 export PATH="$HOME/.cargo/bin:$PATH"
