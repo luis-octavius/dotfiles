@@ -78,6 +78,13 @@ hl.window_rule({
   center = true
 })
 
+hl.window_rule({
+  match = { title = "^Opening.*\\.pdf$" },
+  float = true,
+  size = { "monitor_w * 0.4", "monitor_h * 0.4"},
+  center = true
+})
+
 -- keybindings
 local MOD = hyde.config.modifiers.main 
 
