@@ -57,6 +57,8 @@ _F = { description = "[Launcher|Apps] system monitor" }
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("hyde-shell system.monitor.sh"), _F)
 _F = { description = "[Launcher|Apps] spotify" }
 hl.bind(MOD .. " + SHIFT + M", hl.dsp.exec_cmd(_apps.music))
+hl.bind(MOD .. " + ALT + SHIFT + S", hl.dsp.exec_cmd("steam"))
+
 
 local _wm = "Window Management"
 _F = { description = "[Window Management] close focused window" }
